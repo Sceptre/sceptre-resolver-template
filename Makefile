@@ -17,7 +17,7 @@ acceptance-test:
 
 sonar:
 	    sonar-scanner \
-            -Dsonar.projectKey=Sceptre_resolver-template \
+            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
             -Dsonar.organization=sceptre \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
