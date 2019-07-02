@@ -16,8 +16,8 @@ acceptance-test:
 	    behave acceptance-tests/
 
 sonar:
-	    sonar-scanner \
-            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+	    @sonar-scanner \
+            -Dsonar.projectKey=Sceptre_${REPO_NAME} \
             -Dsonar.organization=sceptre \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \

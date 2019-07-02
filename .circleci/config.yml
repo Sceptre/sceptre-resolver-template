@@ -1,53 +1,5 @@
 version: 2.1
 
-workflows:
-  build-test-deploy:
-    jobs:
-      - build:
-          filters:
-            tags:
-              only: /.*/
-
-      - lint-and-unit-test:
-          requires:
-            - build
-          filters:
-            tags:
-              only: /.*/
-
-      - sonar:
-          requires:
-            - build
-            - lint-and-unit-test
-
-      - deploy-test:
-          requires:
-            - build
-            - lint-and-unit-test
-            - sonar
-          filters:
-            tags:
-              only: /^v([0-9]+)\.([0-9]+)\.([0-9]+)(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
-            branches:
-              ignore: /.*/
-      - hold:
-          type: approval
-          requires:
-            - deploy-test
-
-      - deploy-production:
-          requires:
-            - build
-            - lint-and-unit-test
-            - sonar
-            - deploy-test
-            - hold
-          filters:
-            tags:
-              only: /^v([0-9]+)\.([0-9]+)\.([0-9]+)(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
-            branches:
-              ignore: /.*/
-
 jobs:
   build:
     docker:
@@ -158,13 +110,18 @@ jobs:
             - project
 
   sonar:
+    environment:
+      REPO_NAME: ${CIRCLE_PROJECT_REPONAME}
     docker:
       - image: cloudreach/sceptre-circleci-sonarqube:latest
-
     steps:
       - attach_workspace:
           at: /home/circleci
 
+      - run:
+          name: set envvar
+          command: |
+            export REPO_NAME={{.Environment.CIRCLE_PROJECT_REPONAME}}
       - run:
           name: Run Sonarqube
           command: |
@@ -245,3 +202,53 @@ jobs:
           command: |
             . venv/bin/activate
             twine upload -r pypi dist/*
+workflows:
+  build-test-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+
+      - lint-and-unit-test:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /.*/
+
+      - sonar:
+          context: sceptre-templates-context
+          requires:
+            - build
+            - lint-and-unit-test
+
+      - deploy-test:
+          context: sceptre-templates-context
+          requires:
+            - build
+            - lint-and-unit-test
+            - sonar
+          filters:
+            tags:
+              only: /^v([0-9]+)\.([0-9]+)\.([0-9]+)(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
+            branches:
+              ignore: /.*/
+      - hold:
+          type: approval
+          requires:
+            - deploy-test
+
+      - deploy-production:
+          context: sceptre-templates-context
+          requires:
+            - build
+            - lint-and-unit-test
+            - sonar
+            - deploy-test
+            - hold
+          filters:
+            tags:
+              only: /^v([0-9]+)\.([0-9]+)\.([0-9]+)(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
+            branches:
+              ignore: /.*/
