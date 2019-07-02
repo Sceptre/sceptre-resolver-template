@@ -3,14 +3,16 @@ from setuptools import setup, find_packages
 __version__ = "0.1.0"
 
 
-RESOLVER_NAME = 'resolver'  # lowercase, snakecase
-RESOLVER_MODULE_NAME = 'resolver.resolver'  # name of resolver module e.g. resolver.py
-RESOLVER_COMMAND_NAME = 'custom_resolver'  # how to call the resolver in sceptre e.g. !command_name
-RESOLVER_CLASS = 'CustomResolver'  # CamelCase name of resolver class
+# More information about setting these values: https://github.com/Sceptre/resolver-template/wiki
+
+RESOLVER_NAME = 'sceptre-resolver-template'  # lowercase, snakecase, use `-` as separator.
+RESOLVER_MODULE_NAME = 'resolver.resolver'  # do not change.
+RESOLVER_COMMAND_NAME = 'custom_resolver'  # the resolver call in sceptre e.g. !command_name.
+RESOLVER_CLASS = 'CustomResolver'  # CamelCase name of resolver class in resolver.resolver.
 RESOLVER_DESCRIPTION = ''  # one line summary description
 RESOLVER_AUTHOR = 'Sceptre'  # if multiple use a single string with comma separated names.
 RESOLVER_AUTHOR_EMAIL = 'sceptre@cloudreach.com'  # if multiple use single string with commas.
-RESOLVER_URL = 'https://github.com/sceptre/'  # GitHub repo of your resolver
+RESOLVER_URL = 'https://github.com/sceptre/{}'.format(RESOLVER_NAME)
 
 with open("README.md") as readme_file:
     README = readme_file.read()
