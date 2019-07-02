@@ -6,3 +6,6 @@ Add your resolver readme here. Remember to include the following:
 - Be clear about the purpose of the resolver, its capabilities and limitations.
 - Tell people how to use it.
 - Give examples of the resolver in use.
+
+Read our wiki to learn how to use this repo:
+https://github.com/Sceptre/sceptre-resolver-template/wiki
