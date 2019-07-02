@@ -57,7 +57,9 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+          key:
+            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile"
+            }}
 
       - run:
           name: Install Dependencies
@@ -68,12 +70,14 @@ jobs:
             pip3 install -r requirements.txt
 
       - save_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+          key:
+            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile"
+            }}
           paths:
-            - "venv"
+            - 'venv'
 
       - run:
-          name: Install Navigation
+          name: Install Resolver
           command: |
             . venv/bin/activate
             pip3 install -e .
@@ -94,7 +98,9 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+          key:
+            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile"
+            }}
 
       - run:
           name: Install Dependencies
@@ -105,9 +111,11 @@ jobs:
             pip3 install -r requirements.txt
 
       - save_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+          key:
+            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile"
+            }}
           paths:
-            - "venv"
+            - 'venv'
 
       - run:
           name: Linting
@@ -178,7 +186,7 @@ jobs:
             pip3 install -r requirements.txt
 
           paths:
-            - "venv"
+            - 'venv'
 
       - run:
           name: Initialise .pypirc
@@ -216,7 +224,7 @@ jobs:
             pip3 install -r requirements.txt
 
           paths:
-            - "venv"
+            - 'venv'
 
       - run:
           name: init .pypirc
