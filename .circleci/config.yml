@@ -117,10 +117,6 @@ jobs:
           at: /home/circleci
 
       - run:
-          name: set envvar
-          command: |
-            export REPO_NAME={{.Environment.CIRCLE_PROJECT_REPONAME}}
-      - run:
           name: Run Sonarqube
           command: |
             . venv/bin/activate
