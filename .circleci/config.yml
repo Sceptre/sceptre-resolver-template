@@ -110,8 +110,6 @@ jobs:
             - project
 
   sonar:
-    environment:
-      REPO_NAME: ${CIRCLE_PROJECT_REPONAME}
     docker:
       - image: cloudreach/sceptre-circleci-sonarqube:latest
     steps:
