@@ -20,6 +20,7 @@ sonar:
             -Dsonar.projectKey=Sceptre_${REPO_NAME} \
             -Dsonar.organization=sceptre \
 			-Dsonar.projectName=${CIRCLE_PROJECT_REPONAME} \
+            -Dsonar.pullrequest.provider=GitHub\
 			-Dsonar.pullrequest.key=${CIRCLE_PR_NUMBER} \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
