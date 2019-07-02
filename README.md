@@ -9,3 +9,6 @@ Add your resolver readme here. Remember to include the following:
 
 Read our wiki to learn how to use this repo:
 https://github.com/Sceptre/sceptre-resolver-template/wiki
+
+If you have any questions or encounter an issue
+[please open an issue](https://github.com/Sceptre/sceptre-resolver-template/issues/new)
