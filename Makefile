@@ -19,6 +19,7 @@ sonar:
 	    @sonar-scanner \
             -Dsonar.projectKey=Sceptre_${REPO_NAME} \
             -Dsonar.organization=sceptre \
+			-Dsonar.projectName=${REPO_NAME} \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${SONAR_LOGIN}
