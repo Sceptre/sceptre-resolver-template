@@ -19,7 +19,8 @@ sonar:
 	    @sonar-scanner \
             -Dsonar.projectKey=Sceptre_${REPO_NAME} \
             -Dsonar.organization=sceptre \
-			-Dsonar.projectName=${REPO_NAME} \
+			-Dsonar.projectName=${CIRCLE_PROJECT_REPONAME} \
+			-Dsonar.pullrequest.key=${CIRCLE_PR_NUMBER} \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${SONAR_LOGIN}
