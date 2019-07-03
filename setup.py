@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 
 # More information about setting these values: https://github.com/Sceptre/resolver-template/wiki
