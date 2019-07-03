@@ -17,7 +17,7 @@ acceptance-test:
 
 sonar:
 	    @sonar-scanner \
-            -Dsonar.projectKey=Sceptre_${REPO_NAME} \
+            -Dsonar.projectKey=Sceptre_${CIRCLE_PROJECT_REPONAME} \
             -Dsonar.organization=sceptre \
 			-Dsonar.projectName=${CIRCLE_PROJECT_REPONAME} \
             -Dsonar.pullrequest.provider=GitHub\
