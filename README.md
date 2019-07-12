@@ -8,7 +8,7 @@ Add your resolver readme here. Remember to include the following:
 - Give examples of the resolver in use.
 
 Read our wiki to learn how to use this repo:
-https://github.com/Sceptre/sceptre-resolver-template/wiki
+https://github.com/Sceptre/project/wiki/Sceptre-Resolver-Template
 
 If you have any questions or encounter an issue
-[please open an issue](https://github.com/Sceptre/sceptre-resolver-template/issues/new)
+[please open an issue](https://github.com/Sceptre/project/issues/new)
