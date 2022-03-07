@@ -3,15 +3,14 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: cloudreach/sceptre-circleci-sonarqube:latest
+      - image: cloudreach/sceptre-circleci:0.8.0
 
     steps:
       - checkout
 
       - restore_cache:
           key:
-            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile"
-            }}
+            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
 
       - run:
           name: Install Dependencies
@@ -23,8 +22,7 @@ jobs:
 
       - save_cache:
           key:
-            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile"
-            }}
+            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
           paths:
             - 'venv'
 
@@ -41,7 +39,7 @@ jobs:
 
   lint-and-unit-test:
     docker:
-      - image: cloudreach/sceptre-circleci-sonarqube:latest
+      - image: cloudreach/sceptre-circleci:0.8.0
 
     steps:
       - attach_workspace:
@@ -51,8 +49,7 @@ jobs:
 
       - restore_cache:
           key:
-            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile"
-            }}
+            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
 
       - run:
           name: Install Dependencies
@@ -64,8 +61,7 @@ jobs:
 
       - save_cache:
           key:
-            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile"
-            }}
+            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
           paths:
             - 'venv'
 
@@ -109,22 +105,9 @@ jobs:
           paths:
             - project
 
-  sonar:
-    docker:
-      - image: cloudreach/sceptre-circleci-sonarqube:latest
-    steps:
-      - attach_workspace:
-          at: /home/circleci
-
-      - run:
-          name: Run Sonarqube
-          command: |
-            . venv/bin/activate
-            make sonar
-
   deploy-test:
     docker:
-      - image: circleci/python:3.6
+      - image: cloudreach/sceptre-circleci:0.8.0
 
     steps:
       - checkout
@@ -162,7 +145,7 @@ jobs:
 
   deploy-production:
     docker:
-      - image: circleci/python:3.6
+      - image: cloudreach/sceptre-circleci:0.8.0
 
     steps:
       - checkout
@@ -197,50 +180,25 @@ jobs:
             . venv/bin/activate
             twine upload -r pypi dist/*
 workflows:
-  build-test-deploy:
+  test:
     jobs:
-      - build:
-          filters:
-            tags:
-              only: /.*/
-
+      - build
       - lint-and-unit-test:
           requires:
             - build
-          filters:
-            tags:
-              only: /.*/
-
-      - sonar:
-          context: sceptre-templates-context
-          requires:
-            - build
-            - lint-and-unit-test
-
+  tag:
+    jobs:
       - deploy-test:
           context: sceptre-templates-context
-          requires:
-            - build
-            - lint-and-unit-test
-            - sonar
           filters:
             tags:
               only: /^v([0-9]+)\.([0-9]+)\.([0-9]+)(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
             branches:
               ignore: /.*/
-      - hold:
-          type: approval
-          requires:
-            - deploy-test
-
       - deploy-production:
           context: sceptre-templates-context
           requires:
-            - build
-            - lint-and-unit-test
-            - sonar
             - deploy-test
-            - hold
           filters:
             tags:
               only: /^v([0-9]+)\.([0-9]+)\.([0-9]+)(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
