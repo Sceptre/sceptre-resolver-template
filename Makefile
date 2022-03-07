@@ -7,25 +7,9 @@ coverage: coverage-all
 		coverage report --show-missing
 
 test:
-	    pytest --junitxml=test-reports/junit.xml
-
+	    python -m pytest --junitxml=test-reports/junit.xml
 lint:
-	    flake8 .
-
-acceptance-test:
-	    behave acceptance-tests/
-
-sonar:
-	    @sonar-scanner \
-            -Dsonar.projectKey=Sceptre_${CIRCLE_PROJECT_REPONAME} \
-            -Dsonar.organization=sceptre \
-			-Dsonar.projectName=${CIRCLE_PROJECT_REPONAME} \
-            -Dsonar.pullrequest.provider=GitHub\
-			-Dsonar.branch.name=${CIRCLE_BRANCH}\
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${SONAR_LOGIN}
-
+	    pre-commit run --all-files --show-diff-on-failure
 
 dist: clean
 	python3 setup.py sdist
