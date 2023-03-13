@@ -1,4 +1,3 @@
-
 class TestStackActions(object):
     def setup_method(self, test_method):
         pass
