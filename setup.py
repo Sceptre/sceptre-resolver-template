@@ -25,7 +25,7 @@ with open("README.md") as readme_file:
     README = readme_file.read()
 
 install_requirements = [
-    "sceptre>=4.0",
+    "sceptre>=3.2",
 ]
 
 test_requirements = [
