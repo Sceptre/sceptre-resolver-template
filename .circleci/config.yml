@@ -8,88 +8,45 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          key:
-            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
-
       - run:
-          name: Install
-          command: |
-            pyenv virtualenv 3.9.4 venv
-            pyenv global venv
-            make install-dev
+          name: Install dependencies
+          command: poetry install --extras sceptre -v
 
       - save_cache:
           key:
-            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+            v1-dependency-cache-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
           paths:
-            - 'venv'
+            - '~/.cache/pypoetry'
 
-      - persist_to_workspace:
-          root: /home/circleci
-          paths:
-            - project
+      - run:
+          name: Run pre-commit
+          command: poetry run pre-commit run --all-files
 
-  lint-and-unit-test:
+      - run:
+          name: Build package
+          command: poetry build
+
+  tests:
     docker:
       - image: sceptreorg/sceptre-circleci:2.0.0
 
     steps:
-      - attach_workspace:
-          at: /home/circleci
-
       - checkout
 
       - restore_cache:
           key:
-            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+            v1-dependency-cache-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
 
       - run:
-          name: Install Dependencies
-          command: |
-            pyenv virtualenv 3.9.4 venv
-            pyenv global venv
-            make install-dev
-
-      - save_cache:
-          key:
-            v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
-          paths:
-            - 'venv'
-
-      - run:
-          name: Linting
-          command: |
-            pyenv global venv
-            make lint
-
-      - run:
-          name: Unit Test
-          command: |
-            pyenv global venv
-            make test-all
-
-      - run:
-          name: Coverage
-          command: |
-            pyenv global venv
-            make coverage
+          name: Unit Tests
+          command: poetry run tox
 
       - store_test_results:
           path: test-reports
 
       - store_artifacts:
-          path: test-reports
-          destination: test-reports
-
-      - store_artifacts:
-          path: coverage.xml
+          path: htmlcov
           destination: coverage-reports
-
-      - persist_to_workspace:
-          root: /home/circleci
-          paths:
-            - project
 
   deploy-test:
     docker:
@@ -97,77 +54,37 @@ jobs:
 
     steps:
       - checkout
-      - run:
-          name: Install Dependencies
-          command: |
-            pyenv virtualenv 3.9.4 venv
-            pyenv global venv
-            make install-dev
 
-          paths:
-            - 'venv'
+      - restore_cache:
+          key:
+            v1-dependency-cache-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
 
       - run:
-          name: Initialise .pypirc
+          name: Test upload to PyPi
           command: |
-            echo -e "[distutils]\n  index-servers =\n    test-pypi\n\n" >> ~/.pypirc
-            echo -e "[test-pypi]" >> ~/.pypirc
-            echo -e "username: $PYPI_TEST_USER" >> ~/.pypirc
-            echo -e "password: $PYPI_TEST_PASSWORD" >> ~/.pypirc
-            echo -e "repository: https://test.pypi.org/legacy/" >> ~/.pypirc
+            poetry config repositories.test-pypi "https://test.pypi.org/legacy/"
+            poetry publish --build -r test-pypi -u $PYPI_TEST_USER -p $PYPI_TEST_PASSWORD
 
-      - run:
-          name: Create Distribution
-          command: |
-            pyenv global venv
-            make dist
-
-      - run:
-          name: Upload to PyPi
-          command: |
-            pyenv global venv
-            twine upload -r test-pypi dist/*
-
-  deploy-production:
+  deploy-prod:
     docker:
       - image: sceptreorg/sceptre-circleci:2.0.0
 
     steps:
       - checkout
-      - run:
-          name: Install Dependencies
-          command: |
-            pyenv virtualenv 3.9.4 venv
-            pyenv global venv
-            make install-dev
 
-          paths:
-            - 'venv'
-
-      - run:
-          name: init .pypirc
-          command: |
-            echo -e "[distutils]\n  index-servers =\n    pypi\n\n" >> ~/.pypirc
-            echo -e "[pypi]" >> ~/.pypirc
-            echo -e "username: $PYPI_PROD_USER" >> ~/.pypirc
-            echo -e "password: $PYPI_PROD_PASSWORD" >> ~/.pypirc
-
-      - run:
-          name: Create Distribution
-          command: |
-            pyenv global venv
-            make dist
+      - restore_cache:
+          key:
+            v1-dependency-cache-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
 
       - run:
           name: Upload to PyPi
-          command: |
-            pyenv global venv
-            twine upload -r pypi dist/*
+          command: poetry publish --build -u $PYPI_PROD_USER -p $PYPI_PROD_PASSWORD
+
 workflows:
   test:
     jobs:
       - build
-      - lint-and-unit-test:
+      - tests:
           requires:
             - build
   tag:
@@ -179,7 +96,7 @@ workflows:
               only: /^v([0-9]+)\.([0-9]+)\.([0-9]+)(?:([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
             branches:
               ignore: /.*/
-      - deploy-production:
+      - deploy-prod:
           context: sceptre-templates-context
           requires:
             - deploy-test

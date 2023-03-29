@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 from sceptre.resolvers import Resolver
 
 
-class CustomResolver(Resolver):
+class Custom(Resolver):
     def resolve(self):
         """
         resolve is the method called by Sceptre. It should carry out the work
