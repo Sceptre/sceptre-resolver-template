@@ -32,12 +32,22 @@ python versions.
 $ poetry run tox
 ```
 
+## Releasing
+
+Poetry is used to manage versions and deployments. Follow the below steps to release a version to pypi.
+
+* Update the CHANGELOG.md with changes (see the example in the CHANGELOG comments).
+* Bump the package version (i.e. `poetry version minor`)
+* Create a release PR and have it reviewed, approved and then merged
+* Create a git tag (i.e `git tag -as x.y.z`)
+* Push the tag which will trigger a CI job to deploy to PyPi.
+
 # Get Started
 
 1. Fork this repository
 2. Clone your fork locally
 3. Create a branch for local development
-4. Install dependencies (i.e. poetry install --extras sceptre)
+4. Install dependencies (i.e. poetry install)
 5. Make your changes.
 5. When you're done making changes, check that your changes pass
    [linting](#Linting), [unit tests](#Unit-Tests) and have

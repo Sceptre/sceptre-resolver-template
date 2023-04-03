@@ -10,7 +10,7 @@ jobs:
 
       - run:
           name: Install dependencies
-          command: poetry install --extras sceptre -v
+          command: poetry install -v
 
       - save_cache:
           key:
