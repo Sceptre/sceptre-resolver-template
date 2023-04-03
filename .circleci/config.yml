@@ -10,7 +10,7 @@ jobs:
 
       - run:
           name: Install dependencies
-          command: poetry install --with dev -v
+          command: poetry install -v
 
       - save_cache:
           key:
