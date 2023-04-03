@@ -24,9 +24,6 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8.1"
 
-[tool.poetry.group.dev]
-optional = true
-
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.2.1"
 tox = "^4.0.0"
