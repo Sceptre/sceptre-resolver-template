@@ -17,7 +17,7 @@ repos:
     hooks:
       - id: yamllint
   - repo: https://github.com/awslabs/cfn-python-lint
-    rev: v0.76.1
+    rev: v0.76.2
     hooks:
       - id: cfn-python-lint
         args:
@@ -45,7 +45,8 @@ repos:
     hooks:
       - id: poetry-check
       - id: poetry-lock
+        language_version: python3.10
   - repo: https://github.com/AleksaC/circleci-cli-py
-    rev: v0.1.25085
+    rev: v0.1.25638
     hooks:
       - id: circle-ci-validator
