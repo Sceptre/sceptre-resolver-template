@@ -11,7 +11,8 @@ behaviour to the [Sceptre github discussion](https://github.com/Sceptre/sceptre/
 
 [Poetry](https://pypi.org/project/poetry/) is the tool that is used for
 dependency management, versioning and deployment management to pypi.
-Please install poetry and execute commands from the poetry environment.
+Please [install poetry](https://python-poetry.org/docs/#installation)
+and execute commands from the poetry environment.
 
 ## Linting
 
@@ -26,7 +27,7 @@ can manually execute the validations by running `pre-commit run --all-files`.
 ## Unit Tests
 
 [Tox](https://pypi.org/project/tox/) is used to execute tests against multiple
-python versions.
+python versions inside of poetry virtual environments.
 
 ```bash
 $ poetry run tox
@@ -48,8 +49,11 @@ Poetry is used to manage versions and deployments. Follow the below steps to rel
 2. Clone your fork locally
 3. Create a branch for local development
 4. Install dependencies (i.e. poetry install)
-5. Make your changes.
-5. When you're done making changes, check that your changes pass
+5. Update the [pyproject.toml](pyproject.toml) file with information
+   specific to the project. Refer to the [poetry documentation](https://python-poetry.org/docs/pyproject/)
+   for a reference to the configurations.
+6. Add source code and tests for the project.
+7. When you're done making changes, check that your changes pass
    [linting](#Linting), [unit tests](#Unit-Tests) and have
    sufficient coverage.
-6. Submit a pull request through the GitHub website.
+8. Submit a pull request through the GitHub website.
