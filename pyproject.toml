@@ -9,16 +9,6 @@ authors = ["Sceptre <sceptreorg@gmail.com>"]
 description = "A Github template for Sceptre resolvers"
 keywords = ["sceptre", "sceptre-resolver"]
 license = "Apache-2.0"
-classifiers = [
-  "Intended Audience :: Developers",
-  "Natural Language :: English",
-  "Environment :: Console",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-]
 
 [tool.poetry.plugins."sceptre.resolvers"]
 "custom" = "resolver.custom:Custom"
