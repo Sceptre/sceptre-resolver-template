@@ -19,7 +19,7 @@ classifiers = [
 "custom" = "resolver.custom:Custom"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.2.1"
